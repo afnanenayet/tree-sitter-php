@@ -30,26 +30,26 @@ if ($a==0) {
     condition: (parenthesized_expression (binary_expression
       left: (variable_name (name))
       right: (integer)))
-    body: (compound_statement (echo_statement (string))))
+    body: (compound_statement (echo_statement (encapsed_string (string)))))
   (if_statement
     condition: (parenthesized_expression (binary_expression
       left: (variable_name (name))
       right: (integer)))
-    body: (compound_statement (echo_statement (string)))
+    body: (compound_statement (echo_statement (encapsed_string (string))))
     alternative: (else_clause
-      body: (compound_statement (echo_statement (string)))))
+      body: (compound_statement (echo_statement (encapsed_string (string))))))
   (if_statement
     condition: (parenthesized_expression (binary_expression
       left: (variable_name (name))
       right: (integer)))
-    body: (compound_statement (echo_statement (string)))
+    body: (compound_statement (echo_statement (encapsed_string (string))))
     alternative: (else_if_clause
       condition: (parenthesized_expression (binary_expression
         left: (variable_name (name))
         right: (integer)))
-      body: (compound_statement (echo_statement (string))))
+      body: (compound_statement (echo_statement (encapsed_string (string)))))
     alternative: (else_clause
-      body: (compound_statement (echo_statement (string))))))
+      body: (compound_statement (echo_statement (encapsed_string (string)))))))
 
 ==============================
 Alternative if statements
@@ -82,6 +82,52 @@ endif;
     alternative: (else_clause
       body: (colon_block
         (echo_statement (integer))))))
+
+====================================
+Wordpress colon blocks
+====================================
+
+<?php
+
+if ($post) :
+		?>
+		<?php
+
+		if ( $open ) {
+			$attachment_id;
+		}
+
+		?>
+    <?php
+	else :
+		$post;
+
+	endif;
+
+	?>
+
+---
+
+(program
+  (php_tag)
+  (if_statement
+    condition: (parenthesized_expression (variable_name (name)))
+    body: (colon_block
+      (text_interpolation (php_tag))
+      (if_statement
+        condition: (parenthesized_expression (variable_name (name)))
+        body: (compound_statement (expression_statement (variable_name (name))))
+      )
+    )
+    (text_interpolation (php_tag))
+    alternative: (else_clause
+      body: (colon_block
+        (expression_statement (variable_name (name)))
+      )
+    )
+  )
+  (text_interpolation)
+)
 
 ==============================
 While statements
@@ -187,12 +233,12 @@ switch ($a) {
     body: (switch_block
       (case_statement
         value: (integer)
-        (echo_statement (string)) (break_statement))
+        (echo_statement (encapsed_string (string))) (break_statement))
       (case_statement
         value: (integer)
-        (echo_statement (string)) (break_statement))
+        (echo_statement (encapsed_string (string))) (break_statement))
       (default_statement
-        (echo_statement (string)) (break_statement))))
+        (echo_statement (encapsed_string (string))) (break_statement))))
   (text_interpolation))
 
 ==============================
@@ -243,7 +289,7 @@ include "015.inc";
 
 (program
   (php_tag)
-  (expression_statement (include_expression (string))))
+  (expression_statement (include_expression (encapsed_string (string)))))
 
 ==============================
 Do-while statements
@@ -294,13 +340,13 @@ try {
     body: (compound_statement)
     (catch_clause
       type: (type_list
-        (type_name (name))
+        (named_type (name))
       )
       body: (compound_statement))
     (catch_clause
       type: (type_list
-        (type_name (name))
-        (type_name (name))
+        (named_type (name))
+        (named_type (name))
       )
       name: (variable_name (name))
       body: (compound_statement))
@@ -309,21 +355,21 @@ try {
   (try_statement
     body: (compound_statement
       (expression_statement (function_call_expression
-        function: (qualified_name (name))
+        function: (name)
         arguments: (arguments))))
     (catch_clause
       type: (type_list
-        (type_name (name))
+        (named_type (name))
       )
       name: (variable_name (name))
       body: (compound_statement
         (expression_statement (print_intrinsic (binary_expression
-          left: (string)
+          left: (encapsed_string (string))
           right: (member_call_expression
             object: (variable_name (name))
             name: (name)
             arguments: (arguments)))))
-        (expression_statement (print_intrinsic (string)))))))
+        (expression_statement (print_intrinsic (encapsed_string (escape_sequence))))))))
 
 ==============================
 Foreach statements
@@ -351,7 +397,7 @@ endforeach;
     body: (compound_statement
       (echo_statement (binary_expression
         left: (subscript_expression (variable_name (name)) (integer))
-        right: (string)))))
+        right: (encapsed_string (escape_sequence))))))
   (foreach_statement
     (variable_name (name))
     (pair (variable_name (name)) (variable_name (name))))
@@ -391,10 +437,10 @@ FOREACH ($a AS $b) {
           (if_statement
             (parenthesized_expression (variable_name (name)))
             (compound_statement
-              (expression_statement (function_call_expression (qualified_name (name)) (arguments))))
+              (expression_statement (function_call_expression (name) (arguments))))
               (else_clause
                 (compound_statement
-                  (expression_statement (function_call_expression (qualified_name (name)) (arguments)))))))
+                  (expression_statement (function_call_expression (name) (arguments)))))))
         (parenthesized_expression (variable_name (name)))))))
 
 
@@ -412,11 +458,11 @@ echo ANIMALS[1];
 (program
   (php_tag)
   (echo_statement
-    (qualified_name (name))
+    (name)
   )
   (echo_statement
     (subscript_expression
-      (qualified_name (name))
+      (name)
       (integer)
     )
   )

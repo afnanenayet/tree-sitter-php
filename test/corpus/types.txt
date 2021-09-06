@@ -12,12 +12,12 @@ function b(): A\B {}
   (php_tag)
   (function_definition
     (name) (formal_parameters)
-    (type_list (type_name (name)))
+    (type_list (named_type (name)))
     (compound_statement))
   (function_definition
     (name) (formal_parameters)
     (type_list
-      (type_name (namespace_name_as_prefix (namespace_name (name))) (name))
+      (named_type (qualified_name (namespace_name_as_prefix (namespace_name (name))) (name)))
     )
     (compound_statement)))
 
@@ -69,7 +69,7 @@ function b(): ?Something {}
   (function_definition
     (name) (formal_parameters)
     (type_list
-      (optional_type (type_name (name)))
+      (optional_type (named_type (name)))
     )
     (compound_statement)))
 
@@ -102,8 +102,65 @@ function a(int|string|null $var) : ?int|MyClass {}
       (optional_type
         (primitive_type)
       )
-      (type_name (name))
+      (named_type (name))
     )
     body: (compound_statement)
+  )
+)
+
+==========================
+Mixed type
+==========================
+
+<?php
+
+function a(mixed|string $var) : mixed {
+
+}
+---
+
+(program
+  (php_tag)
+  (function_definition
+    (name)
+    (formal_parameters
+      (simple_parameter
+        (type_list
+          (primitive_type)
+          (primitive_type)
+        )
+        (variable_name (name))
+      )
+    )
+    (type_list (primitive_type))
+    (compound_statement)
+  )
+)
+
+==========================
+Static type
+==========================
+
+<?php
+
+function a(string $var) : static {
+
+}
+---
+
+(program
+  (php_tag)
+  (function_definition
+    (name)
+    (formal_parameters
+      (simple_parameter
+        (type_list
+          (primitive_type)
+        )
+        (variable_name (name))
+      )
+    )
+    (type_list (primitive_type))
+    (compound_statement)
   )
 )
