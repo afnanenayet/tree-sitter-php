@@ -298,6 +298,7 @@ module.exports = grammar({
 
     final_modifier: $ => keyword('final'),
     abstract_modifier: $ => keyword('abstract'),
+    readonly_modifier: $ => keyword('readonly'),
 
     class_interface_clause: $ => seq(
       keyword('implements'),
@@ -339,7 +340,8 @@ module.exports = grammar({
       $.visibility_modifier,
       $.static_modifier,
       $.final_modifier,
-      $.abstract_modifier
+      $.abstract_modifier,
+      $.readonly_modifier
     )),
 
     property_element: $ => seq(
@@ -446,6 +448,7 @@ module.exports = grammar({
 
     property_promotion_parameter: $ => seq(
       field('visibility', $.visibility_modifier),
+      field('readonly', optional($.readonly_modifier)),
       field('type', optional($._type)), // Note: callable is not a valid type here, but instead of complicating the parser, we defer this checking to any intelligence using the parser
       field('name', $.variable_name),
       optional(seq(
@@ -491,6 +494,8 @@ module.exports = grammar({
       )
     ),
 
+    bottom_type: $ => 'never',
+
     union_type: $ => prec.right(pipeSep1($._types)),
 
     primitive_type: $ => choice(
@@ -523,7 +528,7 @@ module.exports = grammar({
       keyword('unset', false)
     ),
 
-    _return_type: $ => seq(':', field('return_type', $._type)),
+    _return_type: $ => seq(':', field('return_type', choice($._type, $.bottom_type))),
 
     const_element: $ => seq(
       choice($.name, alias($._reserved_identifier, $.name)), '=', $._expression
@@ -845,7 +850,7 @@ module.exports = grammar({
     ),
 
     unary_op_expression: $ => choice(
-      seq('@', $._expression),
+      prec(PREC.INC, seq('@', $._expression)),
       prec.left(PREC.NEG, seq(choice('+', '-', '~', '!'), $._expression))
     ),
 
@@ -1097,17 +1102,24 @@ module.exports = grammar({
       keyword('static')
     )),
 
+    variadic_placeholder: $ => token('...'),
+
     arguments: $ => seq(
       '(',
-      commaSep($.argument),
-      optional(','),
-      ')'
+      choice(
+        seq(
+          commaSep($.argument),
+          optional(','),
+        ),
+        $.variadic_placeholder,
+      ),
+      ')',
     ),
 
     argument: $ => seq(
       optional(seq(field('name', $.name), ':')),
       optional(field('reference_modifier', $.reference_modifier)),
-      choice($.variadic_unpacking, $._expression)
+      choice(alias($._reserved_identifier, $.name), $.variadic_unpacking, $._expression)
     ),
 
     member_call_expression: $ => prec(PREC.CALL, seq(
