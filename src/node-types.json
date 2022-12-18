@@ -1360,6 +1360,10 @@
           {
             "type": "final_modifier",
             "named": true
+          },
+          {
+            "type": "readonly_modifier",
+            "named": true
           }
         ]
       },
@@ -1881,11 +1885,11 @@
       "required": false,
       "types": [
         {
-          "type": "_type",
+          "type": "class_interface_clause",
           "named": true
         },
         {
-          "type": "class_interface_clause",
+          "type": "primitive_type",
           "named": true
         }
       ]
@@ -2582,7 +2586,7 @@
     "fields": {},
     "children": {
       "multiple": true,
-      "required": true,
+      "required": false,
       "types": [
         {
           "type": "match_conditional_expression",
@@ -5369,11 +5373,11 @@
   },
   {
     "type": "float",
-    "named": false
+    "named": true
   },
   {
     "type": "float",
-    "named": true
+    "named": false
   },
   {
     "type": "fn",
@@ -5561,6 +5565,10 @@
   },
   {
     "type": "trait",
+    "named": false
+  },
+  {
+    "type": "true",
     "named": false
   },
   {
