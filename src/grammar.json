@@ -1220,12 +1220,24 @@
                     {
                       "type": "SYMBOL",
                       "name": "abstract_modifier"
-                    },
-                    {
-                      "type": "SYMBOL",
-                      "name": "readonly_modifier"
                     }
                   ]
+                }
+              },
+              {
+                "type": "BLANK"
+              }
+            ]
+          },
+          {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "FIELD",
+                "name": "modifier",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "readonly_modifier"
                 }
               },
               {
@@ -2321,6 +2333,22 @@
     "property_promotion_parameter": {
       "type": "SEQ",
       "members": [
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "FIELD",
+              "name": "attributes",
+              "content": {
+                "type": "SYMBOL",
+                "name": "attribute_list"
+              }
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
         {
           "type": "FIELD",
           "name": "visibility",
@@ -7139,8 +7167,16 @@
           ]
         },
         {
-          "type": "SYMBOL",
-          "name": "string_value"
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "string_value"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
         },
         {
           "type": "STRING",
@@ -7154,7 +7190,7 @@
         "type": "PREC",
         "value": 1,
         "content": {
-          "type": "REPEAT",
+          "type": "REPEAT1",
           "content": {
             "type": "PATTERN",
             "value": "\\\\'|\\\\\\\\|\\\\?[^'\\\\]"

@@ -1350,7 +1350,7 @@
         ]
       },
       "modifier": {
-        "multiple": false,
+        "multiple": true,
         "required": false,
         "types": [
           {
@@ -3767,6 +3767,16 @@
     "type": "property_promotion_parameter",
     "named": true,
     "fields": {
+      "attributes": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "attribute_list",
+            "named": true
+          }
+        ]
+      },
       "default_value": {
         "multiple": false,
         "required": false,
@@ -4357,7 +4367,7 @@
     "fields": {},
     "children": {
       "multiple": false,
-      "required": true,
+      "required": false,
       "types": [
         {
           "type": "string_value",

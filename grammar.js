@@ -284,7 +284,8 @@ module.exports = grammar({
 
     class_declaration: $ => prec.right(seq(
       optional(field('attributes', $.attribute_list)),
-      optional(field('modifier', choice($.final_modifier, $.abstract_modifier, $.readonly_modifier))),
+      optional(field('modifier', choice($.final_modifier, $.abstract_modifier))),
+      optional(field('modifier', $.readonly_modifier)),
       keyword('class'),
       field('name', $.name),
       optional($.base_clause),
@@ -450,6 +451,7 @@ module.exports = grammar({
     ),
 
     property_promotion_parameter: $ => seq(
+      optional(field('attributes', $.attribute_list)),
       field('visibility', $.visibility_modifier),
       field('readonly', optional($.readonly_modifier)),
       field('type', optional($._type)), // Note: callable is not a valid type here, but instead of complicating the parser, we defer this checking to any intelligence using the parser
@@ -1284,11 +1286,11 @@ module.exports = grammar({
         /[bB]'/,
         "'"
       ),
-      $.string_value,
+      optional($.string_value),
       "'",
     ),
 
-    string_value: $ => token(prec(1, repeat(/\\'|\\\\|\\?[^'\\]/))), // prec(1, ...) is needed to avoid conflict with $.comment
+    string_value: _ => token(prec(1, repeat1(/\\'|\\\\|\\?[^'\\]/))), // prec(1, ...) is needed to avoid conflict with $.comment
 
     heredoc_body: $ => seq($._new_line,
       repeat1(prec.right(
