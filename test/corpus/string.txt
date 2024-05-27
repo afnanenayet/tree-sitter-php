@@ -537,11 +537,9 @@ okay to do';
       (string_content)))
   (expression_statement
     (string
-      (string_content)
       (string_content)))
   (expression_statement
     (string
-      (string_content)
       (string_content)))
   (expression_statement
     (string
@@ -670,6 +668,15 @@ EOT;
 <<< EOF
 EOF;
 
+<<< EOF
+
+
+
+EOF;
+
+// this should not be parsed as valid but it is
+<<<EOF EOF;
+
 <<<EOT
  \$
 EOT;
@@ -693,6 +700,11 @@ EOL;
 EOL;
 
 <<<EOL
+    $b'
+    "$b'"
+EOL;
+
+<<<"EOL"
     $b'
     "$b'"
 EOL;
@@ -834,6 +846,15 @@ EOL;
   (expression_statement
     (heredoc
       identifier: (heredoc_start)
+      end_tag: (heredoc_end)))
+  (comment)
+  (expression_statement
+    (heredoc
+      identifier: (heredoc_start)
+      end_tag: (heredoc_end)))
+  (expression_statement
+    (heredoc
+      identifier: (heredoc_start)
       value: (heredoc_body
         (string_content)
         (escape_sequence))
@@ -883,6 +904,19 @@ EOL;
         (variable_name
           (name))
         (string_content))
+      end_tag: (heredoc_end)))
+  (expression_statement
+    (heredoc
+      identifier: (heredoc_start)
+      value: (heredoc_body
+        (string_content)
+        (variable_name
+          (name))
+        (string_content)
+        (string_content)
+        (variable_name
+          (name))
+        (string_content))
       end_tag: (heredoc_end))))
 
 ==========================
@@ -895,7 +929,7 @@ Nowdocs
 <?php echo phpversion().PHP_SAPI;
 PHP;
 
-<<< 'EOF'
+<<<'EOF'
 
 EOF;
 
@@ -905,6 +939,15 @@ EOF;
 
 <<< 'EOF'
 EOF;
+
+<<< 'EOF'
+
+
+
+EOF;
+
+// this should not be parsed as valid but it is
+<<<'EOF' EOF;
 
 <<< 'EOF'
 \x0b, \x0c or \x0d
@@ -956,6 +999,15 @@ EOF;
     (nowdoc
       identifier: (heredoc_start)
       end_tag: (heredoc_end)))
+  (expression_statement
+    (nowdoc
+      identifier: (heredoc_start)
+      end_tag: (heredoc_end)))
+  (expression_statement
+    (nowdoc
+      identifier: (heredoc_start)
+      end_tag: (heredoc_end)))
+  (comment)
   (expression_statement
     (nowdoc
       identifier: (heredoc_start)
@@ -1099,7 +1151,6 @@ if (preg_match('#([\w\(\)\.\,\;]|[`]{1})$#', $var)
 ) {
     echo "test";
 }
-?>
 
 ---
 
@@ -1119,12 +1170,6 @@ if (preg_match('#([\w\(\)\.\,\;]|[`]{1})$#', $var)
           (arguments
             (argument
               (string
-                (string_content)
-                (string_content)
-                (string_content)
-                (string_content)
-                (string_content)
-                (string_content)
                 (string_content)))
             (argument
               (variable_name
@@ -1135,14 +1180,7 @@ if (preg_match('#([\w\(\)\.\,\;]|[`]{1})$#', $var)
             (argument
               (string
                 (string_content)
-                (string_content)
-                (string_content)
-                (string_content)
-                (string_content)
-                (string_content)
-                (string_content)
                 (escape_sequence)
-                (string_content)
                 (string_content)))
             (argument
               (variable_name
