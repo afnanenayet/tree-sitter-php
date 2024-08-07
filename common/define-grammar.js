@@ -276,12 +276,14 @@ module.exports = function defineGrammar(dialect) {
       ),
 
       trait_declaration: $ => seq(
+        optional(field('attributes', $.attribute_list)),
         keyword('trait'),
         field('name', $.name),
         field('body', $.declaration_list),
       ),
 
       interface_declaration: $ => seq(
+        optional(field('attributes', $.attribute_list)),
         keyword('interface'),
         field('name', $.name),
         optional($.base_clause),
@@ -496,7 +498,7 @@ module.exports = function defineGrammar(dialect) {
         field('visibility', $.visibility_modifier),
         field('readonly', optional($.readonly_modifier)),
         field('type', optional($.type)), // Note: callable is not a valid type here, but instead of complicating the parser, we defer this checking to any intelligence using the parser
-        field('name', $.variable_name),
+        field('name', choice($.by_ref, $.variable_name)),
         optional(seq(
           '=',
           field('default_value', $.expression),
@@ -724,18 +726,18 @@ module.exports = function defineGrammar(dialect) {
       for_statement: $ => seq(
         keyword('for'),
         '(',
-        optional($._expressions),
+        field('initialize', optional($._expressions)),
         ';',
-        optional($._expressions),
+        field('condition', optional($._expressions)),
         ';',
-        optional($._expressions),
+        field('update', optional($._expressions)),
         ')',
         choice(
           $._semicolon,
-          $.statement,
+          field('body', $.statement),
           seq(
             ':',
-            repeat($.statement),
+            field('body', repeat($.statement)),
             keyword('endfor'),
             $._semicolon,
           ),
@@ -1248,6 +1250,7 @@ module.exports = function defineGrammar(dialect) {
             keyword('namespace', false),
             keyword('null', false),
             keyword('static', false),
+            keyword('throw', false),
             'parent',
             'self',
             /true|false/i,
