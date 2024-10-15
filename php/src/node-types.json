@@ -2010,23 +2010,7 @@
         "required": false,
         "types": [
           {
-            "type": "encapsed_string",
-            "named": true
-          },
-          {
-            "type": "heredoc",
-            "named": true
-          },
-          {
-            "type": "integer",
-            "named": true
-          },
-          {
-            "type": "nowdoc",
-            "named": true
-          },
-          {
-            "type": "string",
+            "type": "expression",
             "named": true
           }
         ]
@@ -3843,6 +3827,7 @@
   {
     "type": "program",
     "named": true,
+    "root": true,
     "fields": {},
     "children": {
       "multiple": true,
@@ -5321,7 +5306,17 @@
   {
     "type": "visibility_modifier",
     "named": true,
-    "fields": {}
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "operation",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "while_statement",
@@ -5867,6 +5862,10 @@
   {
     "type": "null",
     "named": false
+  },
+  {
+    "type": "operation",
+    "named": true
   },
   {
     "type": "or",
