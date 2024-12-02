@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.13)
 
 project(tree-sitter-php
-        VERSION "0.23.5"
+        VERSION "0.23.11"
 		DESCRIPTION "PHP & PHP-Only grammars for tree-sitter"
         HOMEPAGE_URL "https://github.com/tree-sitter/tree-sitter-php"
         LANGUAGES C)
@@ -58,6 +58,6 @@ add_subdirectory(php tree-sitter-php)
 
 add_subdirectory(php_only tree-sitter-php_only)
 
-add_custom_target(test "${TREE_SITTER_CLI}" test
+add_custom_target(ts-test "${TREE_SITTER_CLI}" test
                   WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
                   COMMENT "tree-sitter test")
